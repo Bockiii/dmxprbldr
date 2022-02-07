@@ -1,7 +1,6 @@
 name: Build Preimage
 
-on:
-  workflow_call:
+on: workflow_dispatch
 
 env:
   GHCR_SLUG: ghcr.io/Bockiii/dmxprbldr
