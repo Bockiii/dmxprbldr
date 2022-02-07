@@ -3,6 +3,8 @@
 UMASK_SET=${UMASK_SET:-022}
 umask "$UMASK_SET"
 
+cd /
+
 if [ ! -z ${INTPORT} ]; then
 	port=$INTPORT
 else
@@ -15,4 +17,4 @@ DEEMIX_SERVER_PORT=$port
 DEEMIX_HOST=0.0.0.0
 
 echo "[services.d] Starting Deemix"
-s6-setuidgid abc server
+s6-setuidgid abc ./server
