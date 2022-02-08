@@ -11,5 +11,10 @@ else
 	port=6595
 fi
 
+export DEEMIX_DATA_DIR=/config/
+export DEEMIX_MUSIC_DIR=/downloads/
+export DEEMIX_SERVER_PORT=$port
+export DEEMIX_HOST=0.0.0.0
+
 echo "[services.d] Starting Deemix"
 s6-setuidgid abc ./server
