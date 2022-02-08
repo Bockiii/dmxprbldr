@@ -5,9 +5,3 @@ printf '[cont-init.d] Fixing Folder Permissions\n'
 
 chown -R abc:abc /config
 chown -R abc:abc /downloads
-
-echo "export DEEMIX_DATA_DIR=/config/" >> /etc/environment
-echo "export DEEMIX_MUSIC_DIR=/downloads/" >> /etc/environment
-echo "export DEEMIX_SERVER_PORT=$port" >> /etc/environment
-echo "export DEEMIX_HOST=0.0.0.0" >> /etc/environment
-s6-setuidgid abc source /etc/environment
