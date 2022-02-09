@@ -1,4 +1,4 @@
-FROM lsiobase/ubuntu:focal
+FROM lsiobase/alpine:3.15
 
 ARG BUILD_DATE
 ENV BUILD_DATEENV=${BUILD_DATE}
