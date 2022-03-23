@@ -26,7 +26,7 @@ jobs:
       - name: Start Docker - PR
         run: |
           docker build -t prbuild $GITHUB_WORKSPACE/rss-bridge/;
-          docker run -d -p 3001:80 prbuild
+          docker run -d -v $GITHUB_WORKSPACE/rss-bridge/whitelist.txt:/app/whitelist.txt -p 3001:80 prbuild
       - name: Sleep for 5 seconds
         run: sleep 5s
         shell: bash
