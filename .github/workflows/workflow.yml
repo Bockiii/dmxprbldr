@@ -26,7 +26,8 @@ jobs:
           docker run -d -v ${GITHUB_WORKSPACE}/rss-bridge/whitelist.txt:/app/whitelist.txt -p 3000:80 ghcr.io/rss-bridge/rss-bridge:latest
       - name: Start Docker - PR
         run: |
-          docker run -d -v ${GITHUB_WORKSPACE}/rss-bridge:/app -p 3001:80 ghcr.io/rss-bridge/rss-bridge:latest
+          docker build -f ${GITHUB_WORKSPACE}/rss-bridge/Dockerfile -t prbuild
+          docker run -d -p 3001:80 prbuild
       - name: Sleep for 5 seconds
         run: sleep 5s
         shell: bash
