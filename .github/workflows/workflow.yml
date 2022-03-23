@@ -19,8 +19,7 @@ jobs:
           cd rss-bridge;
           wget https://patch-diff.githubusercontent.com/raw/RSS-Bridge/rss-bridge/pull/$PR.patch;
           cat $PR.patch | patch -p1;
-          cat $PR.patch | grep " bridges/.*\.php" | sed "s= bridges/\(.*\)Bridge.php.*=\1=g" | sort | uniq > whitelist.txt;
-          chown -R www-data:www-data ${GITHUB_WORKSPACE}/rss-bridge
+          cat $PR.patch | grep " bridges/.*\.php" | sed "s= bridges/\(.*\)Bridge.php.*=\1=g" | sort | uniq > whitelist.txt
       - name: Start Docker - Current
         run: |
           docker run -d -v ${GITHUB_WORKSPACE}/rss-bridge/whitelist.txt:/app/whitelist.txt -p 3000:80 ghcr.io/rss-bridge/rss-bridge:latest
