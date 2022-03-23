@@ -9,13 +9,12 @@ import os.path
 
 def testBridges(bridges,status):
     for bridge in bridges:
-        if bridge.get('data-ref'):
-            if bridge.get('data-ref') in IGNORED:
+        bridgeid = bridge.get('data-ref').split('-')[1]
+        if bridgeid:
+            if bridgeid in IGNORED:
                 continue
-            RESULTS[bridge.get('data-ref')] = {}
-            RESULTS[bridge.get('data-ref')]['timestamp'] = TIMEOFRUN
             errormessages = []
-            bridgestring = '/?action=display&bridge=' + bridge.get('data-ref') + '&format=html'
+            bridgestring = '/?action=display&bridge=' + bridgeid + '&format=html'
             forms = bridge.find_all("form")
             formstrings = []
             for form in forms:
@@ -38,10 +37,10 @@ def testBridges(bridges,status):
             if not errormessages:
                 # getBridge(URL + bridgestring + random.choice(formstrings),bridge.get('data-ref'))
                 r = requests.get(URL + bridgestring + random.choice(formstrings))
-                with open("./results/" + bridge.get('data-ref') + '-' + status + '.html', 'w') as file:
+                with open("./results/" + bridgeid + '-' + status + '.html', 'w') as file:
                     file.write(r.text)
             else:
-                with open("./results/" + bridge.get('data-ref') + '-' + status + '.html', 'w') as file:
+                with open("./results/" + bridgeid + '-' + status + '.html', 'w') as file:
                     file.write(str(errormessages))
                 # RESULTS[bridge.get('data-ref')]['missing'] = errormessages
 
