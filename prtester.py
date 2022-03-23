@@ -3,7 +3,6 @@ from bs4 import BeautifulSoup
 import random
 import json
 import time
-import pandas as pd
 import os.path
 
 
