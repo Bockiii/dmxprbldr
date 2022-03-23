@@ -15,7 +15,7 @@ def testBridges(bridges,status):
             RESULTS[bridge.get('data-ref')] = {}
             RESULTS[bridge.get('data-ref')]['timestamp'] = TIMEOFRUN
             errormessages = []
-            bridgestring = '/?action=display&bridge=' + bridge.get('data-ref') + '&format=Json'
+            bridgestring = '/?action=display&bridge=' + bridge.get('data-ref') + '&format=html'
             forms = bridge.find_all("form")
             formstrings = []
             for form in forms:
@@ -42,7 +42,7 @@ def testBridges(bridges,status):
                     file.write(r.text)
             else:
                 with open(bridge.get('data-ref') + '-' + status + '.html', 'w') as file:
-                    file.write(errormessages)
+                    file.write(str(errormessages))
                 # RESULTS[bridge.get('data-ref')]['missing'] = errormessages
 
 gitstatus = ["current", "pr"]
