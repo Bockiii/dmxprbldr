@@ -1,0 +1,43 @@
+name: 'PR Testing'
+
+on:
+  workflow_dispatch:  # click the button on Github repo!
+
+jobs:
+  test-pr:
+    name: Test PR
+    runs-on: ubuntu-latest
+    # This uses a fixed PR for testing. Will use ${{github.event.number}} in combination with the PR trigger in finished form.
+    # See https://github.com/actions/checkout/issues/58#issuecomment-663103947
+    steps:
+      - name: Check out self
+        uses: actions/checkout@v2.3.2
+      - name: Check out rss-bridge
+        run: |
+          PR=2457
+          git clone https://github.com/RSS-Bridge/rss-bridge.git --depth 1;
+          cd rss-bridge;
+          wget https://patch-diff.githubusercontent.com/raw/RSS-Bridge/rss-bridge/pull/$PR.patch;
+          cat $PR.patch | patch -p1;
+          cat $PR.patch | grep " bridges/.*\.php" | sed "s= bridges/\(.*\)Bridge.php.*=\1=g" | sort | uniq > whitelist.txt;
+          chown -R www-data:www-data ${GITHUB_WORKSPACE}/rss-bridge
+      - name: Start Docker - Current
+        run: |
+          docker run -d -v ${GITHUB_WORKSPACE}/rss-bridge/whitelist.txt:/app/whitelist.txt -p 3000:80 ghcr.io/rss-bridge/rss-bridge:latest
+      - name: Start Docker - PR
+        run: |
+          docker run -d -v ${GITHUB_WORKSPACE}/rss-bridge:/app -p 3001:80 ghcr.io/rss-bridge/rss-bridge:latest
+      - name: Sleep for 5 seconds
+        run: sleep 5s
+        shell: bash
+      - name: Setup python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.7'
+          cache: 'pip'
+      - name: Install requirements
+        run: |
+          cd ${GITHUB_WORKSPACE}
+          pip install -r requirements.txt
+      - name: Run bridge tests
+        run: python prtester.py
