@@ -38,10 +38,10 @@ def testBridges(bridges,status):
             if not errormessages:
                 # getBridge(URL + bridgestring + random.choice(formstrings),bridge.get('data-ref'))
                 r = requests.get(URL + bridgestring + random.choice(formstrings))
-                with open(bridge.get('data-ref') + '-' + status + '.html', 'w') as file:
+                with open("./results/" + bridge.get('data-ref') + '-' + status + '.html', 'w') as file:
                     file.write(r.text)
             else:
-                with open(bridge.get('data-ref') + '-' + status + '.html', 'w') as file:
+                with open("./results/" + bridge.get('data-ref') + '-' + status + '.html', 'w') as file:
                     file.write(str(errormessages))
                 # RESULTS[bridge.get('data-ref')]['missing'] = errormessages
 
