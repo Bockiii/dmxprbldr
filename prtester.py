@@ -9,7 +9,8 @@ import os.path
 
 def testBridges(bridges,status):
     for bridge in bridges:
-        bridgeid = bridge.get('data-ref').split('-')[1]
+        bridgeid = bridge.get('data-ref')
+        bridgeid = bridgeid.split('-')[1]
         if bridgeid:
             if bridgeid in IGNORED:
                 continue
