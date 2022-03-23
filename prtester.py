@@ -49,9 +49,9 @@ gitstatus = ["current", "pr"]
 
 for status in gitstatus:
     if status == "current":
-        port = 3000
+        port = "3000"
     elif status == "pr":
-        port = 3001
+        port = "3001"
     URL = "http://localhost:" + port
     page = requests.get(URL)
     soup = BeautifulSoup(page.content, "html.parser")
