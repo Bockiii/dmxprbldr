@@ -14,7 +14,7 @@ def testBridges(bridges,status):
             if bridgeid in IGNORED:
                 continue
             errormessages = []
-            bridgestring = '/?action=display&bridge=' + bridgeid + '&format=html'
+            bridgestring = '/?action=display&bridge=' + bridgeid + '&format=mrss'
             forms = bridge.find_all("form")
             formstrings = []
             for form in forms:
@@ -37,10 +37,10 @@ def testBridges(bridges,status):
             if not errormessages:
                 # getBridge(URL + bridgestring + random.choice(formstrings),bridge.get('data-ref'))
                 r = requests.get(URL + bridgestring + random.choice(formstrings))
-                with open(os.getcwd() + "/results/" + bridgeid + '-' + status + '.html', 'w+') as file:
+                with open(os.getcwd() + "/results/" + bridgeid + '-' + status + '.rss', 'w+') as file:
                     file.write(r.text)
             else:
-                with open(os.getcwd() + "/results/" + bridgeid + '-' + status + '.html', 'w+') as file:
+                with open(os.getcwd() + "/results/" + bridgeid + '-' + status + '.rss', 'w+') as file:
                     file.write(str(errormessages))
                 # RESULTS[bridge.get('data-ref')]['missing'] = errormessages
 
