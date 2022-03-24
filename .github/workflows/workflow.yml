@@ -39,16 +39,20 @@ jobs:
           cd $GITHUB_WORKSPACE
           pip install -r requirements.txt
       - name: Run bridge tests
-        id: testrun
         run: |
           mkdir results;
-          python prtester.py;
-          bridgelist=$(find ./results -name "*.xml")
-      - name: Pull request artifacts
+          python prtester.py
+      - name: Find result files
+        uses: tj-actions/glob@v7.10
+        id: artifacts
+        with:
+          files: |
+            ./results/*.xml
+      - name: Upload results to PR
         uses: gavv/pull-request-artifacts@v1.0.0
         with:
           commit: ${{ github.event.pull_request.head.sha }}
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           artifacts-branch: artifacts
           artifacts: |
-            ${{ bridgelist }}
+            ${{ steps.artifacts.outputs.paths }}
