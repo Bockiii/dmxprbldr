@@ -35,10 +35,9 @@ def testBridges(bridges,status):
                             formstring = formstring + '&' + parameter.get('name') + '=on'
                 formstrings.append(formstring)
             if not errormessages:
-                page = requests.get(URL + bridgestring + random.choice(formstrings))
-                page.encoding='utf-8-sig'
+                r = requests.get(URL + bridgestring + random.choice(formstrings))
                 with open(os.getcwd() + "/results/" + bridgeid + '-' + status + '.xml', 'w+') as file:
-                    file.write(page)
+                    file.write(r.text)
             else:
                 with open(os.getcwd() + "/results/" + bridgeid + '-' + status + '.xml', 'w+') as file:
                     file.write(str(errormessages))
