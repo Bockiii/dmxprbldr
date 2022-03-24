@@ -55,4 +55,4 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           artifacts-branch: artifacts
           artifacts: |
-            results/Gelbooru-pr.rss
+            results/Gelbooru-pr.xml
