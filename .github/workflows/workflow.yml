@@ -51,4 +51,4 @@ jobs:
           repo-token: ${{ secrets.GITHUB_TOKEN }}
           artifacts-branch: artifacts
           artifacts: |
-            $bridgelist
+            ${{ bridgelist }}
