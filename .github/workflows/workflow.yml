@@ -56,4 +56,3 @@ jobs:
           artifacts-branch: artifacts
           artifacts: |
             results/Gelbooru-pr.html
-            results/*.html
