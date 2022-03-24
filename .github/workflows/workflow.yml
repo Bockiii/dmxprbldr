@@ -47,7 +47,7 @@ jobs:
         id: artifacts
         with:
           files: |
-            ./results/*.html
+            ./results/*.xml
       - name: Upload results to PR
         uses: gavv/pull-request-artifacts@v1.0.0
         with:

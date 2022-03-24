@@ -1,6 +1,5 @@
 import requests
 from bs4 import BeautifulSoup
-from pywebcopy import save_webpage
 import random
 import json
 import time
@@ -15,7 +14,7 @@ def testBridges(bridges,status):
             if bridgeid in IGNORED:
                 continue
             errormessages = []
-            bridgestring = '/?action=display&bridge=' + bridgeid + '&format=html'
+            bridgestring = '/?action=display&bridge=' + bridgeid + '&format=mrss'
             forms = bridge.find_all("form")
             formstrings = []
             for form in forms:
@@ -36,14 +35,12 @@ def testBridges(bridges,status):
                             formstring = formstring + '&' + parameter.get('name') + '=on'
                 formstrings.append(formstring)
             if not errormessages:
-                kwargs = {'project_name': 'rssbridge'}
-                save_webpage(
-                    url=URL + bridgestring + random.choice(formstrings),
-                    project_folder='results',
-                    **kwargs
-                )
+                page = requests.get(URL + bridgestring + random.choice(formstrings))
+                page.encoding='utf-8-sig'
+                with open(os.getcwd() + "/results/" + bridgeid + '-' + status + '.xml', 'w+') as file:
+                    file.write(page)
             else:
-                with open(os.getcwd() + "/results/" + bridgeid + '-' + status + '.html', 'w+') as file:
+                with open(os.getcwd() + "/results/" + bridgeid + '-' + status + '.xml', 'w+') as file:
                     file.write(str(errormessages))
                 # RESULTS[bridge.get('data-ref')]['missing'] = errormessages
 
