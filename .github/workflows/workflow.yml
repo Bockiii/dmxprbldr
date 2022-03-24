@@ -37,7 +37,8 @@ jobs:
       - name: Install requirements
         run: |
           cd $GITHUB_WORKSPACE
-          pip install -r requirements.txt
+          mv -t . .github/prtester-requirements.txt .github/prtester.py
+          pip install -r prtester-requirements.txt
       - name: Run bridge tests
         run: |
           mkdir results;

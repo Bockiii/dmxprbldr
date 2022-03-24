@@ -49,11 +49,11 @@ def testBridges(bridges,status):
                     # file with the url of em's public instance and then write it all to file.
                     r = requests.get(URL + bridgestring + formstring)
                     pagetext = r.text.replace('static/HtmlFormat.css','https://feed.eugenemolotov.ru/static/HtmlFormat.css')
-                    with open(os.getcwd() + "/results/" + bridgeid + '-' + status + 'context' + str(formid) + '.html', 'w+') as file:
+                    with open(os.getcwd() + "/results/" + bridgeid + '-' + status + '-context' + str(formid) + '.html', 'w+') as file:
                         file.write(pagetext)
                 else:
                     # if there are errors (which means that a required value has no example or default value), log out which error appeared
-                    with open(os.getcwd() + "/results/" + bridgeid + '-' + status + 'context' + str(formid) + '.html', 'w+') as file:
+                    with open(os.getcwd() + "/results/" + bridgeid + '-' + status + '-context' + str(formid) + '.html', 'w+') as file:
                         file.write(str(errormessages))
                 formid += 1
 
