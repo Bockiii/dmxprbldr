@@ -36,8 +36,7 @@ def testBridges(bridges,status):
                 formstrings.append(formstring)
             if not errormessages:
                 r = requests.get(URL + bridgestring + random.choice(formstrings))
-                pagetext = r.text
-                pagetext = pagetext.replace("static/HtmlFormat.css","https://feed.eugenemolotov.ru/static/HtmlFormat.css")
+                pagetext = r.text.replace('static/HtmlFormat.css','https://feed.eugenemolotov.ru/static/HtmlFormat.css')
                 with open(os.getcwd() + "/results/" + bridgeid + '-' + status + '.html', 'w+') as file:
                     file.write(pagetext)
             else:
