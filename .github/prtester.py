@@ -3,6 +3,7 @@ from bs4 import BeautifulSoup
 import random
 import json
 import os.path
+from datetime import datetime
 
 # This script is specifically written to be used in automation for https://github.com/RSS-Bridge/rss-bridge
 #
@@ -55,15 +56,33 @@ def testBridges(bridges,status):
                     # file with the url of em's public instance and then write it all to file.
                     r = requests.get(URL + bridgestring + formstring)
                     pagetext = r.text.replace('static/HtmlFormat.css','https://feed.eugenemolotov.ru/static/HtmlFormat.css')
-                    with open(os.getcwd() + "/results/" + bridgeid + '-' + status + '-context' + str(formid) + '.html', 'w+') as file:
-                        file.write(pagetext)
+                    pagetext = pagetext.encode("utf_8")
+                    termpad = requests.post(url="https://termpad.com/", data=pagetext)
+                    termpadurl = termpad.text
+                    termpadurl = termpadurl.replace('termpad.com/','termpad.com/raw/')
+                    termpadurl = termpadurl.replace('\n','')
+                    with open(os.getcwd() + '/comment.txt', 'a+') as file:
+                        file.write("\n")
+                        file.write("| [`" + bridgeid + '-' + status + '-context' + str(formid) + "`](" + termpadurl + ") | " + date_time + " |")
                 else:
                     # if there are errors (which means that a required value has no example or default value), log out which error appeared
-                    with open(os.getcwd() + "/results/" + bridgeid + '-' + status + '-context' + str(formid) + '.html', 'w+') as file:
-                        file.write(str(errormessages))
+                    termpad = requests.post(url="https://termpad.com/", data=str(errormessages))
+                    termpadurl = termpad.text
+                    termpadurl = termpadurl.replace('termpad.com/','termpad.com/raw/')
+                    termpadurl = termpadurl.replace('\n','')
+                    with open(os.getcwd() + '/comment.txt', 'a+') as file:
+                        file.write("\n")
+                        file.write("| [`" + bridgeid + '-' + status + '-context' + str(formid) + "`](" + termpadurl + ") | " + date_time + " |")
                 formid += 1
 
 gitstatus = ["current", "pr"]
+now = datetime.now()
+date_time = now.strftime("%Y-%m-%d, %H:%M:%S")
+
+with open(os.getcwd() + '/comment.txt', 'w+') as file:
+    file.write(''' ## Pull request artifacts
+| file | last change |
+| ---- | ------ |''')
 
 for status in gitstatus: # run this twice, once for the current version, once for the PR version
     if status == "current":
@@ -75,3 +94,10 @@ for status in gitstatus: # run this twice, once for the current version, once fo
     soup = BeautifulSoup(page.content, "html.parser") # use bs4 to turn the page into soup
     bridges = soup.find_all("section") # get a soup-formatted list of all bridges on the rss-bridge page
     testBridges(bridges,status) # run the main scraping code with the list of bridges and the info if this is for the current version or the pr version
+
+with open(os.getcwd() + '/comment.txt', 'a+') as file:
+    file.write("\n")
+    file.write("<!-- Created by actions-cool/maintain-one-comment -->")
+
+
+# | [`pr2543-Arte7-current-context1.html`](https://htmlpreview.github.io/?https://github.com/RSS-Bridge/rss-bridge/blob/artifacts/pr2543-Arte7-current-context1.html) | f19f5bab022541e49327ffd622d724f187e80b09 |
