@@ -43,9 +43,9 @@ jobs:
       - name: Run bridge tests
         run: |
           mkdir results;
-          python prtester.py
-          EXPORT TEST1="This is a test <!-- Created by actions-cool/maintain-one-comment -->"
-          EXPORT TEST2=$(cat "comment.txt")
+          python prtester.py;
+          TEST1="This is a test <!-- Created by actions-cool/maintain-one-comment -->";
+          TEST2=$(cat "comment.txt")
       - name: maintain-comment
         uses: actions-cool/maintain-one-comment@v2
         with:
