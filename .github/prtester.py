@@ -9,7 +9,7 @@ import os.path
 # This will scrape the whitelisted bridges in the current state (port 3000) and the PR state (port 3001) of
 # RSS-Bridge, generate a feed for each of the bridges and save the output as html files.
 # It also replaces the default static CSS link with a hardcoded link to @em92's public instance, so viewing
-# the HTML file locally will actually work as designed.
+# the HTML file locally will actually work as designed..
 
 def testBridges(bridges,status):
     for bridge in bridges:
