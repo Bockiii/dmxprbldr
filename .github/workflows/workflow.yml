@@ -44,10 +44,9 @@ jobs:
         run: |
           mkdir results;
           python prtester.py
+          testvar = "This is a test <!-- Created by actions-cool/maintain-one-comment -->"
       - name: maintain-comment
         uses: actions-cool/maintain-one-comment@v2
-        run: |
-          testvar = "This is a test <!-- Created by actions-cool/maintain-one-comment -->"
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           body: |
