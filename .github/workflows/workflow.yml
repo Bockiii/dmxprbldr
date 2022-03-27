@@ -44,13 +44,17 @@ jobs:
         run: |
           mkdir results;
           python prtester.py
-          testvar="This is a test <!-- Created by actions-cool/maintain-one-comment -->"
+          EXPORT TEST1="This is a test <!-- Created by actions-cool/maintain-one-comment -->"
+          EXPORT TEST2=$(cat "comment.txt")
       - name: maintain-comment
         uses: actions-cool/maintain-one-comment@v2
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           body: |
-            $testvar
-            ${$testvar}
-            {{ testvar }}
+            $TEST1
+            ${$TEST1}
+            {{ env.TEST1 }}
+            $TEST2
+            ${$TEST2}
+            {{ env.TEST2 }}
           body-include: '<!-- Created by actions-cool/maintain-one-comment -->'
