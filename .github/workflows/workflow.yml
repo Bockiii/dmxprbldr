@@ -9,7 +9,7 @@ jobs:
   test-pr:
     name: Test PR
     runs-on: ubuntu-latest
-    # This uses a fixed PR for testing. Will use ${{github.event.number}} in combination with the PR trigger in finished form.
+    # This uses a fixed PR for testing. Will use ${{github.event.number}} in combination with the PR trigger in finished form..
     # See https://github.com/actions/checkout/issues/58#issuecomment-663103947
     steps:
       - name: Check out self
