@@ -51,7 +51,7 @@ jobs:
           body="${body//$'\r'/'%0D'}";
           bodylength="${#body}";
           echo $bodylength;
-          echo "::set-output name=bodylength::$bodylength"
+          echo "::set-output name=bodylength::${#body}"
           echo "::set-output name=body::$body"
       - name: Find Comment
         if: ${{ steps.testrun.outputs.bodylength > 130 }}
