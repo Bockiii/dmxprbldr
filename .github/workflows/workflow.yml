@@ -9,14 +9,14 @@ jobs:
   test-pr:
     name: Test PR
     runs-on: ubuntu-latest
-    # This uses a fixed PR for testing. Will use ${{github.event.number}} in combination with the PR trigger in finished form.
+    # This uses a fixed PR for testing. Will use ${{github.event.number}} in combination with the PR trigger in finished form..
     # See https://github.com/actions/checkout/issues/58#issuecomment-663103947
     steps:
       - name: Check out self
         uses: actions/checkout@v2.3.2
       - name: Check out rss-bridge
         run: |
-          PR=2556;
+          PR=1475;
           mv .github/prtester-requirements.txt ./requirements.txt;
           mv .github/prtester.py .;
           git clone https://github.com/RSS-Bridge/rss-bridge.git --depth 1;
@@ -51,9 +51,10 @@ jobs:
           body="${body//$'\r'/'%0D'}";
           bodylength="${#body}";
           echo $bodylength;
-          echo "::set-output name=bodylength::$bodylength"
+          echo "::set-output name=bodylength::${#body}"
           echo "::set-output name=body::$body"
       - name: Find Comment
+        if: ${{ steps.testrun.outputs.bodylength > 130 }}
         uses: peter-evans/find-comment@v2
         id: fc
         with:
@@ -61,7 +62,7 @@ jobs:
           comment-author: 'github-actions[bot]'
           body-includes: Pull request artifacts
       - name: Create or update comment
-        if: ${{ steps.testrun.outputs.bodylength > 5 }}
+        if: ${{ steps.testrun.outputs.bodylength > 130 }}
         uses: peter-evans/create-or-update-comment@v2
         with:
           comment-id: ${{ steps.fc.outputs.comment-id }}
