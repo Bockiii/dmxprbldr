@@ -3,13 +3,14 @@ from bs4 import BeautifulSoup
 import random
 import json
 import os.path
+from datetime import datetime
 
 # This script is specifically written to be used in automation for https://github.com/RSS-Bridge/rss-bridge
 #
 # This will scrape the whitelisted bridges in the current state (port 3000) and the PR state (port 3001) of
 # RSS-Bridge, generate a feed for each of the bridges and save the output as html files.
 # It also replaces the default static CSS link with a hardcoded link to @em92's public instance, so viewing
-# the HTML file locally will actually work as designed.
+# the HTML file locally will actually work as designed..
 
 def testBridges(bridges,status):
     for bridge in bridges:
@@ -26,11 +27,15 @@ def testBridges(bridges,status):
                 formstring = ''
                 errormessages = []
                 parameters = form.find_all("input")
+                lists = form.find_all("select")
                 # this for/if mess cycles through all available input parameters, checks if it required, then pulls
                 # the default or examplevalue and then combines it all together into the formstring
                 # if an example or default value is missing for a required attribute, it will throw an error
                 # any non-required fields are not tested!!!
                 for parameter in parameters:
+                    if parameter.get('type') == 'hidden' and parameter.get('name') == 'context':
+                        cleanvalue = parameter.get('value').replace(" ","+")
+                        formstring = formstring + '&' + parameter.get('name') + '=' + cleanvalue
                     if parameter.get('type') == 'number' or parameter.get('type') == 'text':
                         if parameter.has_attr('required'):
                             if parameter.get('placeholder') == '':
@@ -44,20 +49,40 @@ def testBridges(bridges,status):
                     if parameter.get('type') == 'checkbox':
                         if parameter.has_attr('checked'):
                             formstring = formstring + '&' + parameter.get('name') + '=on'
+                for list in lists:
+                    formstring = formstring + '&' + list.get('name') + '=' + list.contents[0].get('value')
                 if not errormessages:
                     # if all example/default values are present, form the full request string, run the request, replace the static css
                     # file with the url of em's public instance and then write it all to file.
                     r = requests.get(URL + bridgestring + formstring)
                     pagetext = r.text.replace('static/HtmlFormat.css','https://feed.eugenemolotov.ru/static/HtmlFormat.css')
-                    with open(os.getcwd() + "/results/" + bridgeid + '-' + status + '-context' + str(formid) + '.html', 'w+') as file:
-                        file.write(pagetext)
+                    pagetext = pagetext.encode("utf_8")
+                    termpad = requests.post(url="https://termpad.com/", data=pagetext)
+                    termpadurl = termpad.text
+                    termpadurl = termpadurl.replace('termpad.com/','termpad.com/raw/')
+                    termpadurl = termpadurl.replace('\n','')
+                    with open(os.getcwd() + '/comment.txt', 'a+') as file:
+                        file.write("\n")
+                        file.write("| [`" + bridgeid + '-' + status + '-context' + str(formid) + "`](" + termpadurl + ") | " + date_time + " |")
                 else:
                     # if there are errors (which means that a required value has no example or default value), log out which error appeared
-                    with open(os.getcwd() + "/results/" + bridgeid + '-' + status + '-context' + str(formid) + '.html', 'w+') as file:
-                        file.write(str(errormessages))
+                    termpad = requests.post(url="https://termpad.com/", data=str(errormessages))
+                    termpadurl = termpad.text
+                    termpadurl = termpadurl.replace('termpad.com/','termpad.com/raw/')
+                    termpadurl = termpadurl.replace('\n','')
+                    with open(os.getcwd() + '/comment.txt', 'a+') as file:
+                        file.write("\n")
+                        file.write("| [`" + bridgeid + '-' + status + '-context' + str(formid) + "`](" + termpadurl + ") | " + date_time + " |")
                 formid += 1
 
 gitstatus = ["current", "pr"]
+now = datetime.now()
+date_time = now.strftime("%Y-%m-%d, %H:%M:%S")
+
+with open(os.getcwd() + '/comment.txt', 'w+') as file:
+    file.write(''' ## Pull request artifacts
+| file | last change |
+| ---- | ------ |''')
 
 for status in gitstatus: # run this twice, once for the current version, once for the PR version
     if status == "current":
@@ -69,3 +94,10 @@ for status in gitstatus: # run this twice, once for the current version, once fo
     soup = BeautifulSoup(page.content, "html.parser") # use bs4 to turn the page into soup
     bridges = soup.find_all("section") # get a soup-formatted list of all bridges on the rss-bridge page
     testBridges(bridges,status) # run the main scraping code with the list of bridges and the info if this is for the current version or the pr version
+
+with open(os.getcwd() + '/comment.txt', 'a+') as file:
+    file.write("\n")
+    file.write("<!-- Created by actions-cool/maintain-one-comment -->")
+
+
+# | [`pr2543-Arte7-current-context1.html`](https://htmlpreview.github.io/?https://github.com/RSS-Bridge/rss-bridge/blob/artifacts/pr2543-Arte7-current-context1.html) | f19f5bab022541e49327ffd622d724f187e80b09 |
